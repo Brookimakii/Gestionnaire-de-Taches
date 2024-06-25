@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\TaskList;
 use App\Form\TaskListType;
 use App\Repository\TaskListRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,20 @@ class TaskListController extends AbstractController
         return $this->render('task_list/index.html.twig', [
             'task_lists' => $taskListRepository->findAll(),
         ]);
+    }
+    #[Route('/private', name: 'app_task_private_list_index', methods: ['GET'])]
+    public function personalList(TaskListRepository $taskListRepository, UserRepository $userRepo): Response
+    {
+      return $this->render('task_list/index.html.twig', [
+        'task_lists' => $taskListRepository->findPersonalListOfUser($this->getUser()),
+      ]);
+    }
+    #[Route('/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
+    public function sharedList(TaskListRepository $taskListRepository, UserRepository $userRepo): Response
+    {
+      return $this->render('task_list/index.html.twig', [
+        'task_lists' => $taskListRepository->findSharedListOfUser($this->getUser()),
+      ]);
     }
 
     #[Route('/new', name: 'app_task_list_new', methods: ['GET', 'POST'])]
