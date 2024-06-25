@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste Listes{% endblock %}
+
+{% block body %}
+    <h1>Liste des Listes</h1>
+
+    {# Formulaire de filtrage des tâches (optionnel) #}
+    {# {{ form_start(filterForm) }}
+       {{ form_widget(filterForm) }}
+       {{ form_end(filterForm) }} #}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task_list in tasks %}
+                <tr>
+                    <td>{{ task_list.id }}</td>
+                    <td>{{ task_list.title }}</td>
+                    <td>{{ task_list.description }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

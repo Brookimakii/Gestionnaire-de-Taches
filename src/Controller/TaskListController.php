@@ -1,96 +1,87 @@
 <?php
 
-namespace App\Controller;
+	namespace App\Controller;
 
-use App\Entity\TaskList;
-use App\Form\TaskListType;
-use App\Repository\TaskListRepository;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+	use App\Entity\TaskList;
+	use App\Form\ListTaskType;
+	use App\Repository\TaskListRepository;
+	use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+	use Symfony\Component\HttpFoundation\Request;
+	use Symfony\Component\HttpFoundation\Response;
+	use Symfony\Component\Routing\Annotation\Route;
+	use Doctrine\ORM\EntityManagerInterface;
 
-#[Route('/task/list')]
-class TaskListController extends AbstractController
-{
-    #[Route('/', name: 'app_task_list_index', methods: ['GET'])]
-    public function index(TaskListRepository $taskListRepository): Response
-    {
-        return $this->render('task_list/index.html.twig', [
-            'task_lists' => $taskListRepository->findAll(),
-        ]);
-    }
-    #[Route('/private', name: 'app_task_private_list_index', methods: ['GET'])]
-    public function personalList(TaskListRepository $taskListRepository, UserRepository $userRepo): Response
-    {
-      return $this->render('task_list/index.html.twig', [
-        'task_lists' => $taskListRepository->findPersonalListOfUser($this->getUser()),
-      ]);
-    }
-    #[Route('/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
-    public function sharedList(TaskListRepository $taskListRepository, UserRepository $userRepo): Response
-    {
-      return $this->render('task_list/index.html.twig', [
-        'task_lists' => $taskListRepository->findSharedListOfUser($this->getUser()),
-      ]);
-    }
+	class TaskListController extends AbstractController {
+		private $entityManager;
 
-    #[Route('/new', name: 'app_task_list_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $taskList = new TaskList();
-        $form = $this->createForm(TaskListType::class, $taskList);
-        $form->handleRequest($request);
+		public function __construct(EntityManagerInterface $entityManager) {
+			$this->entityManager = $entityManager;
+		}
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($taskList);
-            $entityManager->flush();
+		#[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
+		public function personalList(TaskListRepository $taskListRepository): Response {
+			return $this->render('tasklist/list.html.twig', [
+				'tasks' => $taskListRepository->findPersonalListOfUser($this->getUser()),
+			]);
+		}
 
-            return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
-        }
+		#[Route('/tasklists/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
+		public function sharedList(TaskListRepository $taskListRepository): Response {
+			return $this->render('tasklist/list.html.twig', [
+				'tasks' => $taskListRepository->findSharedListOfUser($this->getUser()),
+			]);
+		}
 
-        return $this->render('task_list/new.html.twig', [
-            'task_list' => $taskList,
-            'form' => $form,
-        ]);
-    }
+		#[Route('/tasklists', name: 'tasklist_list')]
+		public function listerListes(): Response {
+			$repository = $this->entityManager->getRepository(TaskList::class);
+			$listes = $repository->findAll();
 
-    #[Route('/{id}', name: 'app_task_list_show', methods: ['GET'])]
-    public function show(TaskList $taskList): Response
-    {
-        return $this->render('task_list/show.html.twig', [
-            'task_list' => $taskList,
-        ]);
-    }
+			return $this->render('tasklist/list.html.twig', [
+				'listes' => $listes,
+			]);
+		}
 
-    #[Route('/{id}/edit', name: 'app_task_list_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(TaskListType::class, $taskList);
-        $form->handleRequest($request);
+		#[Route('/tasklist/creer', name: 'tasklist_creer')]
+		public function creer(Request $request): Response {
+			$taskList = new TaskList();
+			$form = $this->createForm(ListTaskType::class, $taskList);
+			$form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+			if ($form->isSubmitted() && $form->isValid()) {
+				$this->entityManager->persist($taskList);
+				$this->entityManager->flush();
 
-            return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
-        }
+				return $this->redirectToRoute('tasklist_detail', ['id' => $taskList->getId()]);
+			}
 
-        return $this->render('task_list/edit.html.twig', [
-            'task_list' => $taskList,
-            'form' => $form,
-        ]);
-    }
+			return $this->render('tasklist/creer.html.twig', [
+				'form' => $form->createView(),
+			]);
+		}
 
-    #[Route('/{id}', name: 'app_task_list_delete', methods: ['POST'])]
-    public function delete(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$taskList->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($taskList);
-            $entityManager->flush();
-        }
+		#[Route('/tasklist/{id}', name: 'tasklist_detail')]
+		public function detail(TaskList $taskList): Response {
+			return $this->render('tasklist/detail.html.twig', [
+				'taskList' => $taskList,
+			]);
+		}
 
-        return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
-    }
-}
+		#[Route('/tasklist/{id}/modifier', name: 'tasklist_modifier')]
+		public function modifier(Request $request, TaskList $taskList): Response {
+			$form = $this->createForm(ListTaskType::class, $taskList);
+			$form->handleRequest($request);
+
+			if ($form->isSubmitted() && $form->isValid()) {
+				$this->entityManager->flush();
+
+				return $this->redirectToRoute('tasklist_detail', ['id' => $taskList->getId()]);
+			}
+
+			return $this->render('tasklist/modifier.html.twig', [
+				'taskList' => $taskList,
+				'form' => $form->createView(),
+			]);
+		}
+
+	}
