@@ -1,0 +1,46 @@
+{# templates/task/list.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Tâches{% endblock %}
+
+{% block body %}
+    <h1>Liste des Tâches</h1>
+
+    {# Formulaire de filtrage des tâches (optionnel) #}
+    {# {{ form_start(filterForm) }}
+       {{ form_widget(filterForm) }}
+       {{ form_end(filterForm) }} #}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Description</th>
+                <th scope="col">Date de Création</th>
+                <th scope="col">Priorité</th>
+                <th scope="col">Statut</th>ffffgv(-
+                )
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.creation_date ? task.creation_date|date('d/m/Y') : '' }}</td>
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.finished ? 'Terminée' : 'En cours' }}</td>
+                    <td>
+                        <a href="{{ path('task_detail', {'id': task.id}) }}" class="btn btn-info">Détails</a>
+                        <a href="{{ path('task_modifier', {'id': task.id}) }}" class="btn btn-warning">Modifier</a>
+                        {# Ajoutez ici d'autres actions comme sup
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+/////////////////////////////////////////////////////////////////////////////////////d*-eprimer une tâche #}
+                    </td>
