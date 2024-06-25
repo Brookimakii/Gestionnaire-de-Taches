@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -36,6 +38,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
+
+    /**
+     * @var Collection<int, TaskList>
+     */
+    #[ORM\OneToMany(targetEntity: TaskList::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $taskLists;
+
+    /**
+     * @var Collection<int, TaskList>
+     */
+    #[ORM\ManyToMany(targetEntity: TaskList::class, mappedBy: 'sharedWith')]
+    private Collection $collaborateOn;
+
+    public function __construct()
+    {
+        $this->taskLists = new ArrayCollection();
+        $this->collaborateOn = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -119,6 +139,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(string $pseudo): static
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TaskList>
+     */
+    public function getTaskLists(): Collection
+    {
+        return $this->taskLists;
+    }
+
+    public function addTaskList(TaskList $taskList): static
+    {
+        if (!$this->taskLists->contains($taskList)) {
+            $this->taskLists->add($taskList);
+            $taskList->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskList(TaskList $taskList): static
+    {
+        if ($this->taskLists->removeElement($taskList)) {
+            // set the owning side to null (unless already changed)
+            if ($taskList->getOwner() === $this) {
+                $taskList->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TaskList>
+     */
+    public function getCollaborateOn(): Collection
+    {
+        return $this->collaborateOn;
+    }
+
+    public function addCollaborateOn(TaskList $collaborateOn): static
+    {
+        if (!$this->collaborateOn->contains($collaborateOn)) {
+            $this->collaborateOn->add($collaborateOn);
+            $collaborateOn->addSharedWith($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCollaborateOn(TaskList $collaborateOn): static
+    {
+        if ($this->collaborateOn->removeElement($collaborateOn)) {
+            $collaborateOn->removeSharedWith($this);
+        }
 
         return $this;
     }
