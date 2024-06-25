@@ -51,10 +51,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: TaskList::class, mappedBy: 'sharedWith')]
     private Collection $collaborateOn;
 
+    /**
+     * @var Collection<int, Task>
+     */
+    #[ORM\ManyToMany(targetEntity: Task::class, mappedBy: 'assignees')]
+    private Collection $tasks;
+
     public function __construct()
     {
         $this->taskLists = new ArrayCollection();
         $this->collaborateOn = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +202,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->collaborateOn->removeElement($collaborateOn)) {
             $collaborateOn->removeSharedWith($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): static
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->addAssignee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): static
+    {
+        if ($this->tasks->removeElement($task)) {
+            $task->removeAssignee($this);
         }
 
         return $this;
