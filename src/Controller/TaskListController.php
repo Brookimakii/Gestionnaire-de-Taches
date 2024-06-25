@@ -74,18 +74,5 @@ class TaskListController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    #[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
-    public function personalList(TaskListRepository $taskListRepository): Response
-    {
-      return $this->render('task_list/index.html.twig', [
-        'task_lists' => $taskListRepository->findPersonalListOfUser($this->getUser()),
-      ]);
-    }
-    #[Route('/tasklists/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
-    public function sharedList(TaskListRepository $taskListRepository): Response
-    {
-      return $this->render('task_list/index.html.twig', [
-        'task_lists' => $taskListRepository->findSharedListOfUser($this->getUser()),
-      ]);
-    }
+
 }
