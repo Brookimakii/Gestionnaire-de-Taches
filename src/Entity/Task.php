@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,11 +32,23 @@ class Task
     private ?bool $finished = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+
     private ?\DateTimeInterface $dueDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?TaskList $taskList = null;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'tasks')]
+    private Collection $assignees;
+
+    public function __construct()
+    {
+        $this->assignees = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +135,30 @@ class Task
     public function setTaskList(?TaskList $taskList): static
     {
         $this->taskList = $taskList;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getAssignees(): Collection
+    {
+        return $this->assignees;
+    }
+
+    public function addAssignee(User $assignee): static
+    {
+        if (!$this->assignees->contains($assignee)) {
+            $this->assignees->add($assignee);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignee(User $assignee): static
+    {
+        $this->assignees->removeElement($assignee);
 
         return $this;
     }

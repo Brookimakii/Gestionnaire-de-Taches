@@ -21,7 +21,7 @@
                 <td>{{ task_list.title }}</td>
                 <td>{{ task_list.description }}</td>
                 <td>
-                    <a href="{{ path('app_task_list_show', {'id': task_list.id}) }}">show</a>
+                    <a href="{{ path('task_list_all', {'id': task_list.id}) }}">show</a>
                     <a href="{{ path('app_task_list_edit', {'id': task_list.id}) }}">edit</a>
                 </td>
             </tr>

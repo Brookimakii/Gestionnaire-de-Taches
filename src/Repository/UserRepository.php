@@ -1,37 +1,34 @@
 <?php
 
-namespace App\Repository;
+	namespace App\Repository;
 
-use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+	use App\Entity\User;
+	use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+	use Doctrine\Persistence\ManagerRegistry;
+	use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+	use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+	use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
-/**
- * @extends ServiceEntityRepository<User>
- */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
-{
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, User::class);
-    }
+	/**
+	 * @extends ServiceEntityRepository<User>
+	 */
+	class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface {
+		public function __construct(ManagerRegistry $registry) {
+			parent::__construct($registry, User::class);
+		}
 
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
-    {
-        if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
-        }
+		/**
+		 * Used to upgrade (rehash) the user's password automatically over time.
+		 */
+		public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void {
+			if (!$user instanceof User) {
+				throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+			}
 
-        $user->setPassword($newHashedPassword);
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-    }
+			$user->setPassword($newHashedPassword);
+			$this->getEntityManager()->persist($user);
+			$this->getEntityManager()->flush();
+		}
 
 //    /**
 //     * @return User[] Returns an array of User objects
@@ -47,6 +44,36 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 //            ->getResult()
 //        ;
 //    }
+		/**
+		 * @return User[] Returns an array of User objects
+		 */
+		public function getUserAssociateToList($tasklist): array {
+			return $this->createQueryBuilder('u')
+				->join('u.taskLists', 'o')
+				->join('u.collaborateOn', 'a')
+				->where('o.id = :val')
+				->orWhere('a.id = :val')
+				->setParameter('val', $tasklist)
+				->orderBy('u.id', 'ASC')
+				->setMaxResults(10)
+				->getQuery()
+				->getResult();
+		}
+		/**
+		 * @return User[] Returns an array of User objects
+		 */
+		public function getUserNotAssociateToList($tasklist): array {
+			return $this->createQueryBuilder('u')
+				->join('u.taskLists', 'o', 'WITH', 'o.id = :title')
+				->join('u.collaborateOn', 'a','WITH', 'a.id = :title')
+				->where('o.id is NULL')
+				->orWhere('a.id is NULL')
+				->setParameter('val', $tasklist)
+				->orderBy('u.id', 'ASC')
+				->setMaxResults(10)
+				->getQuery()
+				->getResult();
+		}
 
 //    public function findOneBySomeField($value): ?User
 //    {
@@ -57,4 +84,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 //            ->getOneOrNullResult()
 //        ;
 //    }
-}
+	}
