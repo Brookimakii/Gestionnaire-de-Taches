@@ -8,53 +8,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="javascript:history.back()">
-                    <img src="{{ asset('image/retour.png') }}" alt="Retour" class="d-inline-block align-top" width="30" height="30">
-                </a>
-                <a class="navbar-brand" href="#">
-                    <img src="{{ asset('image/burger.png') }}" alt="Logo" class="d-inline-block align-top" width="30" height="30">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto">
-                        {% if app.user %}
-                            <li class="nav-item">
-{#                                <a class="nav-link" href="{{ path('user_profile') }}">{{ app.user.username[0] }}</a>#}
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
+    {% include 'header.html.twig' %}
     <main class="container mt-4">
         {% block body %}{% endblock %}
     </main>
-
-    {# <footer class="bg-light py-3 mt-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center">
-                    <img src="{{ asset('image/créerliste.png') }}" alt="Image 1" class="img-fluid" width="50" height="50">
-                    <p>Mes listes</p>
-                </div>
-                <div class="col text-center">
-                    <img src="{{ asset('image/bouton plus.png') }}" alt="Image 2" class="img-fluid" width="50" height="50">
-                    <p>Ajouter une liste</p>
-                </div>
-                <div class="col text-center">
-                    <img src="{{ asset('image/collab.png') }}" alt="Image 3" class="img-fluid" width="50" height="50">
-                    <p>Liste partagées</p>
-                </div>
-            </div>
-        </div>
-    </footer> #}
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
