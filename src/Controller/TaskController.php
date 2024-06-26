@@ -31,7 +31,7 @@
 
 		#[Route('/tasklist/{id}/task/mein', name: 'task_list_mein')]
 		public function taskAssignTo(TaskRepository $taskRepository, TaskList $taskList): Response {
-			return $this->render('task/list.html.twig', [
+			return $this->render('task/index.html.twig', [
 				'tasks' => $taskRepository->getTaskAssignTo($this->getUser(), $taskList),
 			]);
 		}

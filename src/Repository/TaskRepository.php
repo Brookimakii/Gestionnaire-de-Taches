@@ -45,8 +45,8 @@
 		 */
 		public function getTaskFromList(TaskList $taskList) {
 			return $this->createQueryBuilder('t')
-				->andWhere('t.id = :val')
-				->setParameter('val', $taskList)
+				->andWhere('t.taskList = :taskList')
+				->setParameter('taskList', 1)
 				->orderBy('t.id', 'ASC')
 				->setMaxResults(10)
 				->getQuery()
@@ -55,8 +55,11 @@
 
 		public function getTaskAssignTo(User $user, TaskList $taskList) {
 			return $this->createQueryBuilder('t')
+				->leftJoin('t.assignees', 'a')
 				->andWhere('t.taskList = :taskList')
-				->setParameter('taskList', 1)
+				->andWhere("a.id = :user OR a.id IS NULL")
+				->setParameter('taskList', $taskList)
+				->setParameter('user', $user)
 				->orderBy('t.id', 'ASC')
 				->setMaxResults(10)
 				->getQuery()
