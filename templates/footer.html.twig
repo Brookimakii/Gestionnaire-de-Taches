@@ -1,0 +1,24 @@
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-item">
+                <a href="{{ path('app_task_private_list_index') }}">
+                    <img src="{{ asset('image/créerliste.png') }}" alt="Mes listes" class="footer-icon">
+                    <p>Mes listes</p>
+                </a>
+            </div>
+            <div class="footer-item">
+                <a href="{{ path('tasklist_creer') }}">
+                    <img src="{{ asset('image/bouton plus.png') }}" alt="Ajouter une liste" class="footer-icon">
+                    <p>Ajouter une liste</p>
+                </a>
+            </div>
+            <div class="footer-item">
+                <a href="{{ path('app_task_shared_list_index') }}">
+                    <img src="{{ asset('image/collab.png') }}" alt="Liste partagées" class="footer-icon">
+                    <p>Listes partagées</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
