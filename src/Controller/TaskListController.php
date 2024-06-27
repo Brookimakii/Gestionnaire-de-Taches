@@ -5,6 +5,7 @@
 	use App\Entity\TaskList;
 	use App\Form\ListTaskType;
 	use App\Repository\TaskListRepository;
+	use App\Repository\UserRepository;
 	use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 	use Symfony\Component\HttpFoundation\Request;
 	use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,7 @@
 	use Doctrine\ORM\EntityManagerInterface;
 
 	class TaskListController extends AbstractController {
-		private $entityManager;
+		private EntityManagerInterface $entityManager;
 
 		public function __construct(EntityManagerInterface $entityManager) {
 			$this->entityManager = $entityManager;
@@ -20,10 +21,49 @@
 
 		#[Route('/tasklists', name: 'app_task_list_index', methods: ['GET'])]
 		public function index(TaskListRepository $taskListRepository): Response {
-			return $this->render('task_list/index.html.twig', [
-				'task_lists' => $taskListRepository->findAll(),
+			return $this->render('tasklist/list.html.twig', [
+				'listes' => $taskListRepository->findAll(),
+				'show_footer' => true
 			]);
 		}
+
+
+
+		#[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
+		public function personalList(TaskListRepository $taskListRepository): Response {
+			return $this->render('tasklist/list.html.twig', [
+				'listes' => $taskListRepository->findPersonalListOfUser($this->getUser()),
+				'show_footer' => true
+			]);
+		}
+
+		#[Route('/tasklists/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
+		public function sharedList(TaskListRepository $taskListRepository): Response {
+			return $this->render('tasklist/list.html.twig', [
+				'listes' => $taskListRepository->findSharedListOfUser($this->getUser()),
+				'show_footer' => true
+			]);
+		}
+
+		#[Route('/tasklists/{id}/share', name: 'app_task_list_share', methods: ['GET'])]
+		public function shareList(Request $request, EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository): Response {
+			$form = $this->createForm(TaskListType::class, $taskList);
+			$form->handleRequest($request);
+
+			if ($form->isSubmitted() && $form->isValid()) {
+				$entityManager->flush();
+
+				return $this->redirectToRoute($request->headers->get('referer'), [], Response::HTTP_SEE_OTHER);
+			}
+
+
+			return $this->render('tasklist/list.html.twig', [
+				'collaborators' => $userRepository->getUserAssociateToList($taskList),
+				'otherUsers' => $userRepository->getUserNotAssociateToList($taskList),
+			]);
+		}
+
+
 
 		#[Route('/new', name: 'app_task_list_new', methods: ['GET', 'POST'])]
 		public function new(Request $request, EntityManagerInterface $entityManager): Response {
@@ -77,35 +117,11 @@
 			return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
 		}
 
-
-		#[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
-		public function personalList(TaskListRepository $taskListRepository): Response {
-			return $this->render('tasklist/list.html.twig', [
-				'tasks' => $taskListRepository->findPersonalListOfUser($this->getUser()),
-			]);
-		}
-
-		#[Route('/tasklists/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
-		public function sharedList(TaskListRepository $taskListRepository): Response {
-			return $this->render('tasklist/list.html.twig', [
-				'tasks' => $taskListRepository->findSharedListOfUser($this->getUser()),
-			]);
-		}
-
-		#[Route('/tasklists', name: 'tasklist_list')]
-		public function listerListes(): Response {
-			$repository = $this->entityManager->getRepository(TaskList::class);
-			$listes = $repository->findAll();
-
-			return $this->render('tasklist/list.html.twig', [
-				'listes' => $listes,
-			]);
-		}
-
 		#[Route('/tasklist/creer', name: 'tasklist_creer')]
 		public function creer(Request $request): Response {
 			$taskList = new TaskList();
 			$form = $this->createForm(ListTaskType::class, $taskList);
+			$taskList->setOwner($this->getUser());
 			$form->handleRequest($request);
 
 			if ($form->isSubmitted() && $form->isValid()) {
@@ -122,6 +138,7 @@
 
 		#[Route('/tasklist/{id}', name: 'tasklist_detail')]
 		public function detail(TaskList $taskList): Response {
+//			TODO: Should redirect to "tasklist/{id}/task/" instead.
 			return $this->render('tasklist/detail.html.twig', [
 				'taskList' => $taskList,
 			]);
