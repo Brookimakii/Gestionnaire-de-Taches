@@ -6,6 +6,7 @@
 	use App\Entity\TaskList;
 	use App\Form\TaskType;
 	use App\Repository\TaskRepository;
+	use App\Repository\UserRepository;
 	use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 	use Symfony\Component\HttpFoundation\Request;
 	use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +14,7 @@
 	use Doctrine\ORM\EntityManagerInterface;
 
 	class TaskController extends AbstractController {
-		private $entityManager;
+		private EntityManagerInterface $entityManager;
 
 		public function __construct(EntityManagerInterface $entityManager) {
 			$this->entityManager = $entityManager;
@@ -33,14 +34,18 @@
 		public function taskAssignTo(TaskRepository $taskRepository, TaskList $taskList): Response {
 			return $this->render('task/index.html.twig', [
 				'tasks' => $taskRepository->getTaskAssignTo($this->getUser(), $taskList),
+				'show_footer' => true
 			]);
 		}
+
 		#[Route('/tasklist/{id}/task/all', name: 'task_list_all')]
 		public function taskFromList(TaskRepository $taskRepository,TaskList $taskList): Response {
 			return $this->render('task/index.html.twig', [
 				'tasks' => $taskRepository->getTaskFromList($taskList),
+				'show_footer' => true
 			]);
 		}
+
 
 		#[Route('/task/creer', name: 'task_creer')]
 		public function creer(Request $request): Response {
@@ -68,8 +73,8 @@
 		}
 
 		#[Route('/task/{id}/modifier', name: 'task_modifier')]
-		public function modifier(Request $request, Task $task): Response {
-			$form = $this->createForm(TaskType::class, $task);
+		public function modifier(Request $request ,Task $task, UserRepository $userRepository): Response {
+			$form = $this->createForm(TaskType::class, $task, );
 			$form->handleRequest($request);
 
 			if ($form->isSubmitted() && $form->isValid()) {
@@ -78,9 +83,21 @@
 				return $this->redirectToRoute('task_detail', ['id' => $task->getId()]);
 			}
 
-			return $this->render('task/modifier.html.twig', [
+			return $this->render('task/edit.html.twig', [
 				'task' => $task,
+				'assignable' => $userRepository->getUserAssociateToList($task->getTaskList()),
 				'form' => $form->createView(),
 			]);
+		}
+
+		#[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
+		public function delete(Request $request, Task $task, EntityManagerInterface $entityManager): Response
+		{
+			if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->getPayload()->getString('_token'))) {
+				$entityManager->remove($task);
+				$entityManager->flush();
+			}
+
+			return $this->redirectToRoute($request->headers->get('referer'), [], Response::HTTP_SEE_OTHER);
 		}
 	}

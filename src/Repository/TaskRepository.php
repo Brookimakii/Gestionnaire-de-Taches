@@ -53,7 +53,7 @@
 				->getResult();
 		}
 
-		public function getTaskAssignTo(User $user, TaskList $taskList) {
+		public function getTaskAssignTo($user, TaskList $taskList) {
 			return $this->createQueryBuilder('t')
 				->leftJoin('t.assignees', 'a')
 				->andWhere('t.taskList = :taskList')
