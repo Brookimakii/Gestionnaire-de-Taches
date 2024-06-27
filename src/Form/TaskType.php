@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+// Todo: add a Assign field
+
 class TaskType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
