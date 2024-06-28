@@ -8,7 +8,7 @@
     
     <div class="task-detail" style="background-color: {{ getPriorityColor(task.priority) }}">
         <p>Description : {{ task.description }}</p>
-        <p>Date de création : {{ task.creation_date|date('d/m/Y') }}</p>
+        <p>Date de création : {{ task.creationDate|date('d/m/Y') }}</p>
         <p>Priorité : {{ task.priority }}</p>
         <p>Statut : {% if task.finished %} Terminée {% else %} En cours {% endif %}</p>
     </div>

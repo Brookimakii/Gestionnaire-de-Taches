@@ -9,7 +9,7 @@
 	#[Route('/')]
 	class HomeController extends AbstractController {
 		#[Route('/', name: 'app', methods: ['GET'])]
-		public function index(): Response {
-			return $this->render('index.html.twig');
+		public function index(): ?Response {
+			return $this->redirectToRoute('app_task_private_list_index');
 		}
 	}

@@ -19,11 +19,11 @@
             </tr>
         </thead>
         <tbody>
-            {% for task_list in tasks %}
+            {% for task_list in listes %}
                 <tr>
-                    <td>{{ task_list.id }}</td>
-                    <td>{{ task_list.title }}</td>
-                    <td>{{ task_list.description }}</td>
+                    <td><a href="{{ path('task_list_all', {'id': task_list.id}) }}">{{ task_list.id }}</a></td>
+                    <td><a href="{{ path('task_list_all', {'id': task_list.id}) }}">{{ task_list.title }}</a></td>
+                    <td><a href="{{ path('task_list_all', {'id': task_list.id}) }}">{{ task_list.description }}</a></td>
                 </tr>
             {% endfor %}
         </tbody>
