@@ -1,30 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}TaskList{% endblock %}
+{% block title %}TaskList - {{ task_list.title }}{% endblock %}
 
 {% block body %}
-    <h1>TaskList</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">{{ task_list.title }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ task_list.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ task_list.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ task_list.description }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Description</h5>
+                <p class="card-text">{{ task_list.description }}</p>
+            </div>
+        </div>
 
-    <a href="{{ path('app_task_list_index') }}">back to list</a>
-
-    <a href="{{ path('app_task_list_edit', {'id': task_list.id}) }}">edit</a>
-
-    {{ include('task_list/_delete_form.html.twig') }}
+        <div class="mt-4">
+            <a href="{{ path('app_task_list_index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+            <a href="{{ path('app_task_list_edit', {'id': task_list.id}) }}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            {{ include('task_list/_delete_form.html.twig', { 'button_class': 'btn btn-danger' }) }}
+        </div>
+    </div>
 {% endblock %}

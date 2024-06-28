@@ -4,6 +4,7 @@
 
 	use App\Entity\TaskList;
 	use App\Form\ListTaskType;
+	use App\Form\SearchType;
 	use App\Repository\TaskListRepository;
 	use App\Repository\UserRepository;
 	use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,16 +20,31 @@
 			$this->entityManager = $entityManager;
 		}
 
+
+
 		#[Route('/tasklists', name: 'app_task_list_index', methods: ['GET'])]
-		public function index(TaskListRepository $taskListRepository): Response {
-			return $this->render('tasklist/list.html.twig', [
-				'listes' => $taskListRepository->findAll(),
+		public function index(Request $request, TaskListRepository $taskListRepository): Response
+		{
+			$searchForm = $this->createForm(SearchType::class);
+			$searchForm->handleRequest($request);
+
+			$query = $searchForm->get('query')->getData();
+			$tasks = $query ? $taskListRepository->searchByQuery($query) : $taskListRepository->findAll();
+
+		public function index(Request $request, TaskListRepository $taskListRepository): Response
+		{
+			$searchForm = $this->createForm(SearchType::class);
+			$searchForm->handleRequest($request);
+
+			$query = $searchForm->get('query')->getData();
+			$tasks = $query ? $taskListRepository->searchByQuery($query) : $taskListRepository->findAll();
+
+			return $this->render('task_list/index.html.twig', [
+				'search_form' => $searchForm->createView(),
+				'tasks' => $tasks,
 				'show_footer' => true
 			]);
 		}
-
-
-
 		#[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
 		public function personalList(TaskListRepository $taskListRepository): Response {
 			return $this->render('tasklist/list.html.twig', [
@@ -63,8 +79,6 @@
 				'otherUsers' => $userRepository->getUserNotAssociateToList($taskList),
 			]);
 		}
-
-
 
 		#[Route('/new', name: 'app_task_list_new', methods: ['GET', 'POST'])]
 		public function new(Request $request, EntityManagerInterface $entityManager): Response {
