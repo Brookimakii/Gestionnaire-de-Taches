@@ -21,18 +21,8 @@
 		}
 
 
-
 		#[Route('/tasklists', name: 'app_task_list_index', methods: ['GET'])]
-		public function index(Request $request, TaskListRepository $taskListRepository): Response
-		{
-			$searchForm = $this->createForm(SearchType::class);
-			$searchForm->handleRequest($request);
-
-			$query = $searchForm->get('query')->getData();
-			$tasks = $query ? $taskListRepository->searchByQuery($query) : $taskListRepository->findAll();
-
-		public function index(Request $request, TaskListRepository $taskListRepository): Response
-		{
+		public function index(Request $request, TaskListRepository $taskListRepository): Response {
 			$searchForm = $this->createForm(SearchType::class);
 			$searchForm->handleRequest($request);
 
@@ -45,6 +35,7 @@
 				'show_footer' => true
 			]);
 		}
+
 		#[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
 		public function personalList(TaskListRepository $taskListRepository): Response {
 			return $this->render('tasklist/list.html.twig', [
