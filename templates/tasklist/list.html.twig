@@ -1,31 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste Listes{% endblock %}
+{% block title %}Liste des Listes{% endblock %}
 
 {% block body %}
-    <h1>Liste des Listes</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">Liste des Listes</h1>
 
-    {# Formulaire de filtrage des tâches (optionnel) #}
-    {# {{ form_start(filterForm) }}
-       {{ form_widget(filterForm) }}
-       {{ form_end(filterForm) }} #}
+    {# Formulaire de recherche #}
+    {# {{ form_start(search_form, {'attr': {'class': 'form-inline mb-4'}}) }}
+        <div class="form-group mx-sm-3 mb-2">
+            {{ form_widget(search_form.query, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher...'}}) }}
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Rechercher</button>
+    {{ form_end(search_form) }} #}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Titre</th>
-                <th scope="col">Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for task_list in tasks %}
-                <tr>
-                    <td>{{ task_list.id }}</td>
-                    <td>{{ task_list.title }}</td>
-                    <td>{{ task_list.description }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="row">
+        {% for task_list in tasks %}
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ task_list.title }}</h5>
+                        <p class="card-text">{{ task_list.description }}</p>
+                        <a href="{{ path('app_task_list_edit', {'id': task_list.id}) }}" class="btn btn-primary">Modifier</a>
+                        {{ include('task_list/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    Aucune liste trouvée
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% include 'footer.html.twig' %}
+</div>
 {% endblock %}

@@ -68,4 +68,12 @@
 //            ->getOneOrNullResult()
 //        ;
 //    }
+	public function searchByQuery($query)
+		{
+			return $this->createQueryBuilder('t')
+				->andWhere('t.title LIKE :query OR t.description LIKE :query')
+				->setParameter('query', '%' . $query . '%')
+				->getQuery()
+				->getResult();
+		}
 	}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche{% endblock %}
+
+{% block body %}
+    <h1>Recherche</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Rechercher</button>
+    {{ form_end(form) }}
+
+    {% if results is not empty %}
+        <h2>Résultats de recherche</h2>
+        <ul>
+            {% for taskList in results %}
+                <li>{{ taskList.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun résultat trouvé.</p>
+    {% endif %}
+{% endblock %}
