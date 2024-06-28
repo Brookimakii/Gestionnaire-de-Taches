@@ -5,6 +5,7 @@
 	use App\Entity\TaskList;
 	use App\Form\ListTaskType;
 	use App\Form\SearchType;
+	use App\Form\TaskListType;
 	use App\Repository\TaskListRepository;
 	use App\Repository\UserRepository;
 	use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +40,7 @@
 		#[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
 		public function personalList(TaskListRepository $taskListRepository): Response {
 			return $this->render('tasklist/list.html.twig', [
-				'listes' => $taskListRepository->findPersonalListOfUser($this->getUser()),
+				'tasks' => $taskListRepository->findPersonalListOfUser($this->getUser()),
 				'show_footer' => true
 			]);
 		}
@@ -47,7 +48,7 @@
 		#[Route('/tasklists/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
 		public function sharedList(TaskListRepository $taskListRepository): Response {
 			return $this->render('tasklist/list.html.twig', [
-				'listes' => $taskListRepository->findSharedListOfUser($this->getUser()),
+				'tasks' => $taskListRepository->findSharedListOfUser($this->getUser()),
 				'show_footer' => true
 			]);
 		}

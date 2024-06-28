@@ -30,8 +30,9 @@
 			]);
 		}
 
-		#[Route('/tasklist/{id}/task/mein', name: 'task_list_mein')]
+		#[Route('/tasklist/{id}/task/mine', name: 'task_list_mein')]
 		public function taskAssignTo(TaskRepository $taskRepository, TaskList $taskList): Response {
+			print_r($taskList->getId());
 			return $this->render('task/index.html.twig', [
 				'tasks' => $taskRepository->getTaskAssignTo($this->getUser(), $taskList),
 				'show_footer' => true
@@ -40,6 +41,7 @@
 
 		#[Route('/tasklist/{id}/task/all', name: 'task_list_all')]
 		public function taskFromList(TaskRepository $taskRepository,TaskList $taskList): Response {
+			print_r($taskList->getId());
 			return $this->render('task/index.html.twig', [
 				'tasks' => $taskRepository->getTaskFromList($taskList),
 				'show_footer' => true
