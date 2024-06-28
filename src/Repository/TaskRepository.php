@@ -46,7 +46,7 @@
 		public function getTaskFromList(TaskList $taskList) {
 			return $this->createQueryBuilder('t')
 				->andWhere('t.taskList = :taskList')
-				->setParameter('taskList', 1)
+				->setParameter('taskList', $taskList)
 				->orderBy('t.id', 'ASC')
 				->setMaxResults(10)
 				->getQuery()
