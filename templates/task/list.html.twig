@@ -1,46 +1,25 @@
-{# templates/task/list.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Tâches{% endblock %}
-
 {% block body %}
-    <h1>Liste des Tâches</h1>
+    <div class="container">
+        <h1 class="my-4">Liste de tâches</h1>
 
-    {# Formulaire de filtrage des tâches (optionnel) #}
-    {# {{ form_start(filterForm) }}
-       {{ form_widget(filterForm) }}
-       {{ form_end(filterForm) }} #}
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Titre</th>
-                <th scope="col">Description</th>
-                <th scope="col">Date de Création</th>
-                <th scope="col">Priorité</th>
-                <th scope="col">Statut</th>ffffgv(-
-                )
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+        <div class="list-group">
             {% for task in tasks %}
-                <tr>
-                    <td>{{ task.id }}</td>
-                    <td>{{ task.title }}</td>
-                    <td>{{ task.description }}</td>
-                    <td>{{ task.creation_date ? task.creation_date|date('d/m/Y') : '' }}</td>
-                    <td>{{ task.priority }}</td>
-                    <td>{{ task.finished ? 'Terminée' : 'En cours' }}</td>
-                    <td>
-                        <a href="{{ path('task_detail', {'id': task.id}) }}" class="btn btn-info">Détails</a>
-                        <a href="{{ path('task_modifier', {'id': task.id}) }}" class="btn btn-warning">Modifier</a>
-                        {# Ajoutez ici d'autres actions comme sup
-                </tr>
+                <div class="list-group-item list-group-item-action {{ task.priority|lower }}">
+                    <h5 class="mb-1">{{ task.name }}</h5>
+                    <p class="mb-1">{{ task.description }}</p>
+                    <small>Priorité: {{ task.priority }}</small><br>
+                    <small>Responsable: {{ task.assignee.username }}</small>
+                </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+
+        <style>
+            .list-group-item.high { background-color: #ffdddd; }
+            .list-group-item.medium { background-color: #ffe5b4; }
+            .list-group-item.low { background-color: #ddffdd; }
+            .list-group-item.none { background-color: #f0f0f0; }
+        </style>
+    </div>
 {% endblock %}
-/////////////////////////////////////////////////////////////////////////////////////d*-eprimer une tâche #}
-                    </td>
