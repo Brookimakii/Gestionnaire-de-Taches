@@ -3,30 +3,27 @@
 {% block body %}
     <div class="container">
         <h1 class="my-4">Liste de tâches</h1>
-        {% if tasks is empty %}
-            <div class="alert alert-info" role="alert">
-                Aucune tâche pour l'instant.
-            </div>
-        {% else %}
-            <div class="list-group">
-                {% for task in tasks %}
-                    <div class="list-group-item list-group-item-action {{ task.priority|lower }}">
-                        <h5 class="mb-1">{{ task.name }}</h5>
-                        <p class="mb-1">{{ task.description }}</p>
+
+        <div class="list-group">
+            {% for task in tasks %}
+                <div class="list-group-item list-group-item-action {{ task.priority|lower }}">
+                    <h5 class="mb-1">{{ task.title }}</h5>
+                    <p class="mb-1">{{ task.description }}</p>
+                    {% if task.priority != "" %}
                         <small>Priorité: {{ task.priority }}</small><br>
-                        {# <small>Responsable: {{ task.assignee.username }}</small> #}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}  
-        <a href="{{ path('app_task_list_index') }}" class="btn btn-secondary">Retour à la liste des listes</a>
+                    {% endif %}
+                    {% if task.assignees.count>0 %}
+                        <small>Responsable: {{ task.getAssigneesUsernames() }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
 
         <style>
-            .list-group-item.high { background-color: #ffdddd; }
-            .list-group-item.medium { background-color: #ffe5b4; }
-            .list-group-item.low { background-color: #ddffdd; }
-            .list-group-item.none { background-color: #f0f0f0; }
+            .list-group-item { background-color: #f0f0f0; }
+            .rouge { background-color: #ffdddd; }
+            .orange { background-color: #ffe5b4; }
+            .jaune{ background-color: #ddffdd; }
         </style>
     </div>
-    {% include 'footer.html.twig' %}
 {% endblock %}
