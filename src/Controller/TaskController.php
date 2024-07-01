@@ -35,7 +35,8 @@
 			return $this->render('task/list.html.twig', [
 				'tasks' => $taskRepository->getTaskAssignTo($this->getUser(), $taskList),
 				'show_footer' => "task",
-				'taskList' => $taskList
+				'taskList' => $taskList,
+        		'task_list' => $taskList,
 			]);
 		}
 
@@ -44,7 +45,9 @@
 			return $this->render('task/list.html.twig', [
 				'tasks' => $taskRepository->getTaskFromList($taskList),
 				'show_footer' => "task",
-				'taskList' => $taskList
+				'taskList' => $taskList,
+				'task_list' => $taskList,
+				
 			]);
 		}
 
@@ -72,6 +75,7 @@
 		public function detail(Task $task): Response {
 			return $this->render('task/details.html.twig', [
 				'task' => $task,
+				'task_list' => $task->getTaskList(),
 			]);
 		}
 

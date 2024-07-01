@@ -54,15 +54,12 @@ class UserController extends AbstractController
     #[Route('/profile', name: 'app_user_profile', methods: ['GET'])]
     public function profile(): Response
     {
-        // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
-        // Vérifier si un utilisateur est connecté
         if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
         }
 
-        // Afficher la vue du profil de l'utilisateur
         return $this->render('user/profile.html.twig', [
             'user' => $user,
         ]);
