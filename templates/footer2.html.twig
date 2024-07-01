@@ -1,24 +1,28 @@
 <footer class="footer">
     <div class="container">
         <div class="footer-content">
-            <div class="footer-item">
-                <a href="{{ path('task_list_mein') }}">
-                    <img src="{{ asset('image/créerliste.png') }}" alt="Mes listes" class="footer-icon">
-                    <p>Mes tâches</p>
-                </a>
-            </div>
-            <div class="footer-item">
-                <a href="{{ path('task_creer') }}">
-                    <img src="{{ asset('image/bouton plus.png') }}" alt="Ajouter une liste" class="footer-icon">
-                    <p>Ajouter une tâche</p>
-                </a>
-            </div>
-            <div class="footer-item">
-                <a href="{{ path('task_list_all') }}">
-                    <img src="{{ asset('image/collab.png') }}" alt="Liste partagées" class="footer-icon">
-                    <p>Toutes les tâches</p>
-                </a>
-            </div>
+            {% if taskList is defined %}
+                <div class="footer-item">
+                    <a href="{{ path('task_list_mein', {'id': taskList.id}) }}">
+                        <img src="{{ asset('image/créerliste.png') }}" alt="Mes listes" class="footer-icon">
+                        <p>Mes tâches</p>
+                    </a>
+                </div>
+                <div class="footer-item">
+                    <a href="{{ path('task_creer', {'id': taskList.id}) }}">
+                        <img src="{{ asset('image/bouton plus.png') }}" alt="Ajouter une liste" class="footer-icon">
+                        <p>Ajouter une tâche</p>
+                    </a>
+                </div>
+                <div class="footer-item">
+                    <a href="{{ path('task_list_all', {'id': taskList.id}) }}">
+                        <img src="{{ asset('image/collab.png') }}" alt="Liste partagées" class="footer-icon">
+                        <p>Toutes les tâches</p>
+                    </a>
+                </div>
+            {% else %}
+                <p>taskList not define</p>
+            {% endif %}
         </div>
     </div>
 </footer>
