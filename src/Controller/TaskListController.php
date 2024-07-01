@@ -33,7 +33,7 @@
 			return $this->render('task_list/index.html.twig', [
 				'search_form' => $searchForm->createView(),
 				'tasks' => $tasks,
-				'show_footer' => true
+				'show_footer' => "list"
 			]);
 		}
 
@@ -41,7 +41,7 @@
 		public function personalList(TaskListRepository $taskListRepository): Response {
 			return $this->render('tasklist/list.html.twig', [
 				'tasks' => $taskListRepository->findPersonalListOfUser($this->getUser()),
-				'show_footer' => true
+				'show_footer' => "list"
 			]);
 		}
 
@@ -49,7 +49,7 @@
 		public function sharedList(TaskListRepository $taskListRepository): Response {
 			return $this->render('tasklist/list.html.twig', [
 				'tasks' => $taskListRepository->findSharedListOfUser($this->getUser()),
-				'show_footer' => true
+				'show_footer' => "list"
 			]);
 		}
 
