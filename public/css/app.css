@@ -10,7 +10,8 @@ html, body {
 }
 
 .footer {
-    border-top: #666;
+    background-color: #fcfcfc;
+    border-top: 1px solid lightgrey;
     padding: 10px 0;
     width: 100%;
     position: fixed;
@@ -35,7 +36,7 @@ html, body {
 }
 
 /* Styles personnalisés pour le formulaire de recherche dans la navbar */
-.navbar .form-inline {
+/* .navbar .form-inline {
     display: flex;
     align-items: center;
 }
@@ -47,7 +48,7 @@ html, body {
 
 .navbar .form-inline .btn {
     margin-top: 0;
-}
+} */
 
 
 /* Styles personnalisés pour les listes de listes */
@@ -84,38 +85,39 @@ html, body {
 }
 
 @media screen and (max-width: 320px) {
-    .card-title {
-        font-size: 1.5rem; 
-    }
-
-    .card-text {
-        font-size: 1.2rem; 
+    .container mt-4{
+        width: 100%;
     }
 }
 
+.list-group-item
+{ background-color: #f0f0f0; }
+.rouge { background-color: #ffdddd; }
+.orange { background-color: #ffe5b4; }
+.jaune { background-color: #ddffdd; }
 
-
-
-/* .task-list-item {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 1rem;
-    background-color: #f9f9f9;
-}
-
-.task-list-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.task-list-description {
-    font-size: 1rem;
-    color: #666;
-}
-
-.no-task-lists {
+h1 {
     text-align: center;
-    font-size: 1.2rem;
-    color: #888;
+}
+/* .icon{
+    height: 20px;
+    width: auto;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+.icon-link {
+    text-decoration: none;
+    color: inherit;
+} */
+
+/* .avatar {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px;
 } */
