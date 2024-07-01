@@ -22,7 +22,6 @@
                         <h5 class="card-title">{{ task_list.title }}</h5>
                         <p class="card-text">{{ task_list.description }}</p>
                         <a href="{{ path('app_task_list_edit', {'id': task_list.id}) }}" class="btn btn-primary">Modifier</a>
-                        {{ include('task_list/_delete_form.html.twig') }}
                     </div>
                 </div>
             </div>
@@ -35,6 +34,6 @@
         {% endfor %}
     </div>
 
-    {% include 'footer2.html.twig' %}
+    {% include 'footer.html.twig' %}
 </div>
 {% endblock %}
