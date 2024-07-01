@@ -3,6 +3,8 @@
 {% block title %}Créer une tâche{% endblock %}
 
 {% block body %}
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="{{ asset('js/select2-init.js') }}"></script>
     <h1>Créer une tâche</h1>
 
     {{ form_start(form) }}
