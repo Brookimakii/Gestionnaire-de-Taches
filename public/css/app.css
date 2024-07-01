@@ -35,7 +35,7 @@ html, body {
 }
 
 /* Styles personnalisés pour le formulaire de recherche dans la navbar */
-.navbar .form-inline {
+/* .navbar .form-inline {
     display: flex;
     align-items: center;
 }
@@ -47,6 +47,29 @@ html, body {
 
 .navbar .form-inline .btn {
     margin-top: 0;
+} */
+
+h1.logo {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-brand h1 {
+    display: inline-block;
+}
+
+.navbar-brand {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.navbar-brand img {
+    position: absolute;
+    left: 0;
 }
 
 
@@ -98,7 +121,7 @@ html, body {
 h1 {
     text-align: center;
 }
-.icon{
+/* .icon{
     height: 20px;
     width: auto;
     vertical-align: middle;
@@ -107,7 +130,7 @@ h1 {
 .icon-link {
     text-decoration: none;
     color: inherit;
-}
+} */
 
 /* .avatar {
     display: inline-block;
