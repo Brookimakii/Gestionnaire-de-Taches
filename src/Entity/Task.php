@@ -162,4 +162,16 @@ class Task
 
         return $this;
     }
+
+		public function getAssigneesUsernames(): string {
+			$usernames = "";
+			foreach ($this->assignees as $assignee){
+				$usernames .= $assignee->getPseudo();
+				if ($this->assignees->indexOf($assignee) != sizeof($this->assignees)){
+					$usernames .= ", ";
+				}
+			}
+			return $usernames;
+
+		}
 }

@@ -32,26 +32,27 @@
 
 		#[Route('/tasklist/{id}/task/mine', name: 'task_list_mein')]
 		public function taskAssignTo(TaskRepository $taskRepository, TaskList $taskList): Response {
-			print_r($taskList->getId());
-			return $this->render('task/index.html.twig', [
+			return $this->render('task/list.html.twig', [
 				'tasks' => $taskRepository->getTaskAssignTo($this->getUser(), $taskList),
-				'show_footer' => true
+				'show_footer' => "task",
+				'taskList' => $taskList
 			]);
 		}
 
 		#[Route('/tasklist/{id}/task/all', name: 'task_list_all')]
 		public function taskFromList(TaskRepository $taskRepository,TaskList $taskList): Response {
-			print_r($taskList->getId());
-			return $this->render('task/index.html.twig', [
+			return $this->render('task/list.html.twig', [
 				'tasks' => $taskRepository->getTaskFromList($taskList),
-				'show_footer' => true
+				'show_footer' => "task",
+				'taskList' => $taskList
 			]);
 		}
 
 
-		#[Route('/task/creer', name: 'task_creer')]
-		public function creer(Request $request): Response {
+		#[Route('/tasklist/{id}/task/creer', name: 'task_creer')]
+		public function creer(Request $request, TaskList $taskList): Response {
 			$task = new Task();
+			$task->setTaskList($taskList);
 			$form = $this->createForm(TaskType::class, $task);
 			$form->handleRequest($request);
 
@@ -59,7 +60,7 @@
 				$this->entityManager->persist($task);
 				$this->entityManager->flush();
 
-				return $this->redirectToRoute('task_detail', ['id' => $task->getId()]);
+				return $this->redirectToRoute($request->headers->get('referer'), ['id' => $task->getId()]);
 			}
 
 			return $this->render('task/creation.html.twig', [
