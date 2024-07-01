@@ -10,7 +10,8 @@ html, body {
 }
 
 .footer {
-    border-top: #666;
+    background-color: #fcfcfc;
+    border-top: 1px solid lightgrey;
     padding: 10px 0;
     width: 100%;
     position: fixed;
@@ -48,29 +49,6 @@ html, body {
 .navbar .form-inline .btn {
     margin-top: 0;
 } */
-
-h1.logo {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar-brand h1 {
-    display: inline-block;
-}
-
-.navbar-brand {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.navbar-brand img {
-    position: absolute;
-    left: 0;
-}
 
 
 /* Styles personnalisés pour les listes de listes */
