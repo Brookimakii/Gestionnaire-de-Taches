@@ -21,10 +21,10 @@ class TaskType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('description', TextareaType::class)
-            ->add('creation_date', DateType::class, [
-                'widget' => 'single_text',
-                'data' => new \DateTime(),
-            ])
+//            ->add('creation_date', DateType::class, [
+//                'widget' => 'single_text',
+//                'data' => new \DateTime(),
+//            ])
             
             ->add('priority', ChoiceType::class, [
                 'choices' => [
