@@ -23,7 +23,9 @@ class TaskType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('description', TextareaType::class)
+            ->add('description', TextareaType::class, [
+							'required' => false
+						])
 //            ->add('creation_date', DateType::class, [
 //                'widget' => 'single_text',
 //                'data' => new \DateTime(),
@@ -51,6 +53,7 @@ class TaskType extends AbstractType
 						'class' => User::class,
 						'multiple' => true,
 						'expanded' => false,
+						'required' => false,
 						'choice_label' => 'email',
 						'query_builder' => function(EntityRepository $er) use ($builder){
 							$taskList = $builder->getData()->getTaskList();
