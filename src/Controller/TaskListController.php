@@ -53,8 +53,10 @@
 			]);
 		}
 
+		//----------------------------------------------------------------------------------------------
+
 		// Todo: Link to share & Form to share
-		#[Route('/tasklists/{id}/share', name: 'app_task_list_share', methods: ['GET'])]
+		#[Route('/tasklist/{id}/share', name: 'app_task_list_share', methods: ['GET'])]
 		public function shareList(Request $request, EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository): Response {
 			$form = $this->createForm(TaskListType::class, $taskList);
 			$form->handleRequest($request);
@@ -71,6 +73,44 @@
 				'otherUsers' => $userRepository->getUserNotAssociateToList($taskList),
 			]);
 		}
+
+		#[Route('/tasklist/creer', name: 'tasklist_creer')]
+		public function creer(Request $request): Response {
+			$taskList = new TaskList();
+			$form = $this->createForm(ListTaskType::class, $taskList);
+			$taskList->setOwner($this->getUser());
+			$form->handleRequest($request);
+
+			if ($form->isSubmitted() && $form->isValid()) {
+				$this->entityManager->persist($taskList);
+				$this->entityManager->flush();
+
+				return $this->redirectToRoute('task_list_all', ['id' => $taskList->getId()]);
+			}
+
+			return $this->render('tasklist/creer.html.twig', [
+				'form' => $form->createView(),
+			]);
+		}
+
+		#[Route('/tasklist/{id}/edit', name: 'app_task_list_edit', methods: ['GET', 'POST'])]
+		public function edit(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response {
+			$form = $this->createForm(TaskListType::class, $taskList);
+			$form->handleRequest($request);
+
+			if ($form->isSubmitted() && $form->isValid()) {
+				$entityManager->flush();
+
+				return $this->redirectToRoute('task_list_all', ['id' => $taskList->getId()], Response::HTTP_SEE_OTHER);
+			}
+
+			return $this->render('task_list/edit.html.twig', [
+				'task_list' => $taskList,
+				'form' => $form,
+			]);
+		}
+
+		//----------------------------------------------------------------------------------------------
 
 		#[Route('/new', name: 'app_task_list_new', methods: ['GET', 'POST'])]
 		public function new(Request $request, EntityManagerInterface $entityManager): Response {
@@ -98,23 +138,6 @@
 			]);
 		}
 
-		#[Route('/{id}/edit', name: 'app_task_list_edit', methods: ['GET', 'POST'])]
-		public function edit(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response {
-			$form = $this->createForm(TaskListType::class, $taskList);
-			$form->handleRequest($request);
-
-			if ($form->isSubmitted() && $form->isValid()) {
-				$entityManager->flush();
-
-				return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
-			}
-
-			return $this->render('task_list/edit.html.twig', [
-				'task_list' => $taskList,
-				'form' => $form,
-			]);
-		}
-
 		#[Route('/{id}', name: 'app_task_list_delete', methods: ['POST'])]
 		public function delete(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response {
 			if ($this->isCsrfTokenValid('delete' . $taskList->getId(), $request->getPayload()->getString('_token'))) {
@@ -122,25 +145,6 @@
 				$entityManager->flush();
 			}
 			return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
-		}
-
-		#[Route('/tasklist/creer', name: 'tasklist_creer')]
-		public function creer(Request $request): Response {
-			$taskList = new TaskList();
-			$form = $this->createForm(ListTaskType::class, $taskList);
-			$taskList->setOwner($this->getUser());
-			$form->handleRequest($request);
-
-			if ($form->isSubmitted() && $form->isValid()) {
-				$this->entityManager->persist($taskList);
-				$this->entityManager->flush();
-
-				return $this->redirectToRoute('tasklist_detail', ['id' => $taskList->getId()]);
-			}
-
-			return $this->render('tasklist/creer.html.twig', [
-				'form' => $form->createView(),
-			]);
 		}
 
 		#[Route('/tasklist/{id}', name: 'tasklist_detail')]
