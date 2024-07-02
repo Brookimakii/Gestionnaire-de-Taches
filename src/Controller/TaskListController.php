@@ -14,6 +14,7 @@
 	use Symfony\Component\Routing\Annotation\Route;
 	use Doctrine\ORM\EntityManagerInterface;
 
+	#[Route('tasklist')]
 	class TaskListController extends AbstractController {
 		private EntityManagerInterface $entityManager;
 
@@ -22,7 +23,7 @@
 		}
 
 
-		#[Route('/tasklists', name: 'app_task_list_index', methods: ['GET'])]
+		#[Route('s', name: 'app_task_list_index', methods: ['GET'])]
 		public function index(Request $request, TaskListRepository $taskListRepository): Response {
 			$searchForm = $this->createForm(SearchType::class);
 			$searchForm->handleRequest($request);
@@ -37,7 +38,7 @@
 			]);
 		}
 
-		#[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
+		#[Route('s/private', name: 'app_task_private_list_index', methods: ['GET'])]
 		public function personalList(TaskListRepository $taskListRepository): Response {
 			return $this->render('tasklist/list.html.twig', [
 				'tasks' => $taskListRepository->findPersonalListOfUser($this->getUser()),
@@ -45,7 +46,7 @@
 			]);
 		}
 
-		#[Route('/tasklists/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
+		#[Route('s/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
 		public function sharedList(TaskListRepository $taskListRepository): Response {
 			return $this->render('tasklist/list.html.twig', [
 				'tasks' => $taskListRepository->findSharedListOfUser($this->getUser()),
@@ -56,7 +57,7 @@
 		//----------------------------------------------------------------------------------------------
 
 		// Todo: Link to share & Form to share
-		#[Route('/tasklist/{id}/share', name: 'app_task_list_share', methods: ['GET'])]
+		#[Route('/{id}/share', name: 'app_task_list_share', methods: ['GET'])]
 		public function shareList(Request $request, EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository): Response {
 			$form = $this->createForm(TaskListType::class, $taskList);
 			$form->handleRequest($request);
@@ -74,7 +75,7 @@
 			]);
 		}
 
-		#[Route('/tasklist/creer', name: 'tasklist_creer')]
+		#[Route('/creer', name: 'tasklist_creer')]
 		public function creer(Request $request): Response {
 			$taskList = new TaskList();
 			$form = $this->createForm(ListTaskType::class, $taskList);
@@ -93,7 +94,7 @@
 			]);
 		}
 
-		#[Route('/tasklist/{id}/edit', name: 'app_task_list_edit', methods: ['GET', 'POST'])]
+		#[Route('/{id}/edit', name: 'app_task_list_edit', methods: ['GET', 'POST'])]
 		public function edit(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response {
 			$form = $this->createForm(TaskListType::class, $taskList);
 			$form->handleRequest($request);
@@ -108,6 +109,15 @@
 				'task_list' => $taskList,
 				'form' => $form,
 			]);
+		}
+
+		#[Route('/{id}', name: 'app_task_list_delete', methods: ['POST'])]
+		public function delete(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response {
+			if ($this->isCsrfTokenValid('delete' . $taskList->getId(), $request->getPayload()->getString('_token'))) {
+				$entityManager->remove($taskList);
+				$entityManager->flush();
+			}
+			return $this->redirectToRoute($request->headers->get('referer'), [], Response::HTTP_SEE_OTHER);
 		}
 
 		//----------------------------------------------------------------------------------------------
@@ -136,15 +146,6 @@
 			return $this->render('task_list/show.html.twig', [
 				'task_list' => $taskList,
 			]);
-		}
-
-		#[Route('/{id}', name: 'app_task_list_delete', methods: ['POST'])]
-		public function delete(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response {
-			if ($this->isCsrfTokenValid('delete' . $taskList->getId(), $request->getPayload()->getString('_token'))) {
-				$entityManager->remove($taskList);
-				$entityManager->flush();
-			}
-			return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
 		}
 
 		#[Route('/tasklist/{id}', name: 'tasklist_detail')]
