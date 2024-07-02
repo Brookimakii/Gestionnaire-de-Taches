@@ -32,7 +32,8 @@
         <div class="list-group mt-4">
             {% if tasks is not empty %}
                 {% for task in tasks %}
-                    <a href="{{ path('task_detail', {'id': task.id}) }}" class="list-group-item list-group-item-action {{ task.priority|lower }}">
+                    <a href="{{ path('task_detail', {'id': task.id}) }}"
+                       class="list-group-item list-group-item-action {{ task.priority|lower }}">
                         <h5 class="mb-1">{{ task.title }}</h5>
                         <p class="mb-1">{{ task.description }}</p>
                         {% if task.assignees is defined and task.assignees|length > 0 %}
@@ -48,25 +49,39 @@
         </div>
 
         <style>
-            .list-group-item { background-color: #f0f0f0; }
-            .rouge { background-color: #ffdddd; }
-            .orange { background-color: #ffe5b4; }
-            .jaune { background-color: #ddffdd; }
+            .list-group-item {
+                background-color: #f0f0f0;
+            }
+
+            .rouge {
+                background-color: #ffdddd;
+            }
+
+            .orange {
+                background-color: #ffe5b4;
+            }
+
+            .jaune {
+                background-color: #ddffdd;
+            }
 
             h1 {
                 text-align: center;
             }
+
             .icon {
                 height: 20px;
                 width: auto;
                 vertical-align: middle;
                 margin-left: 10px;
             }
+
             .icon-link {
                 text-decoration: none;
                 color: inherit;
             }
-            .card-text, .card-title{
+
+            .card-text, .card-title {
                 text-align: center;
             }
         </style>
