@@ -117,7 +117,8 @@
 				$entityManager->remove($taskList);
 				$entityManager->flush();
 			}
-			return $this->redirectToRoute($request->headers->get('referer'), [], Response::HTTP_SEE_OTHER);
+
+			return $this->redirectToRoute('app_task_private_list_index');
 		}
 
 		//----------------------------------------------------------------------------------------------
