@@ -167,8 +167,10 @@ class Task
 			$usernames = "";
 			foreach ($this->assignees as $assignee){
 				$usernames .= $assignee->getPseudo();
-				if ($this->assignees->indexOf($assignee) != sizeof($this->assignees)){
+				if ($this->assignees->indexOf($assignee)+1 != sizeof($this->assignees)){
 					$usernames .= ", ";
+				}else{
+					$usernames .= ".";
 				}
 			}
 			return $usernames;
