@@ -63,7 +63,7 @@
 				$this->entityManager->persist($task);
 				$this->entityManager->flush();
 
-				return $this->redirectToRoute($request->headers->get('referer'), ['id' => $task->getId()]);
+				return $this->redirectToRoute('task_list_all', ['id' => $task->getTaskList()->getId()]);
 			}
 
 			return $this->render('task/creation.html.twig', [
