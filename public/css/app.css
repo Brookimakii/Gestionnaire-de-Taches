@@ -35,6 +35,10 @@ html, body {
     height: 50px;
 }
 
+.push {
+    height: 50px;
+}
+
 /* Styles personnalisés pour le formulaire de recherche dans la navbar */
 /* .navbar .form-inline {
     display: flex;
