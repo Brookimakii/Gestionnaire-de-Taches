@@ -25,17 +25,20 @@
         {% else %}
             <div class="list-group">
                 {% for task in tasks %}
+                    <a href="{{ path('task_detail', {'id': task.id}) }}">
                     <div class="list-group-item list-group-item-action {{ task.priority|lower }}">
-                        <h5 class="mb-1">{{ task.name }}</h5>
+                        <h5 class="mb-1">{{ task.title }}</h5>
                         <p class="mb-1">{{ task.description }}</p>
                         <small>Priorité: {{ task.priority }}</small><br>
                         {% if task.assignees is defined and task.assignees|length > 0 %}
                             <small>Responsable: {{ task.getAssigneesUsernames() }}</small>
                         {% endif %}
                     </div>
+                    </a>
                 {% endfor %}
             </div>
-        {% endif %}  
+        {% endif %}
+{#        TODO: Pourquoi ce bouton ?#}
         <a href="{{ path('app_task_list_index') }}" class="btn btn-secondary">Retour à la liste des listes</a>
 
         <style>
@@ -76,5 +79,5 @@
             }
         </style>
     </div>
-    {% include 'footer.html.twig' %}
+{#    {% include 'footer.html.twig' %}#}
 {% endblock %}
