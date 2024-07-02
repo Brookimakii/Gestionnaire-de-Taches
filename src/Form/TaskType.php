@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Task;
+use App\Entity\User;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,7 +23,9 @@ class TaskType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('description', TextareaType::class)
+            ->add('description', TextareaType::class, [
+							'required' => false
+						])
 //            ->add('creation_date', DateType::class, [
 //                'widget' => 'single_text',
 //                'data' => new \DateTime(),
@@ -43,7 +48,27 @@ class TaskType extends AbstractType
             ])
             ->add('due_date', DateType::class, [
                 'widget' => 'single_text',
-            ]);
+            ])
+					->add('assignees', EntityType::class, [
+						'class' => User::class,
+						'multiple' => true,
+						'expanded' => false,
+						'required' => false,
+						'choice_label' => 'email',
+						'query_builder' => function(EntityRepository $er) use ($builder){
+							$taskList = $builder->getData()->getTaskList();
+							return $er->createQueryBuilder('u')
+								->join('u.taskLists', 'o')
+								->join('u.collaborateOn', 'a')
+								->where('o.id = :val')
+								->orWhere('a.id = :val')
+								->setParameter('val', $taskList)
+								->orderBy('u.id', 'ASC');
+						},
+						'attr' => [
+							'class' => 'select2', // Add this line to include the select2 class
+						],
+					]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
