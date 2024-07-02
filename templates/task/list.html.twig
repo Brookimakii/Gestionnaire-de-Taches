@@ -5,14 +5,16 @@
 {% block body %}
     <div class="container">
         <h1 class="mb-4">
-                {% if task_list is defined %}
+            {% if task_list is defined %}
+                {% if app.user == task_list.owner %}
                     <a href="{{ path('app_task_list_edit', {'id': task_list.id}) }}" class="icon-link">
                         <img src="{{ asset('image/crayon.png') }}" alt="modifier liste" class="icon">
                     </a>
-                    {{ task_list.title }}
-                {% else %}
-                    Détails de la liste non disponibles
                 {% endif %}
+                {{ task_list.title }}
+            {% else %}
+                Détails de la liste non disponibles
+            {% endif %}
         </h1>
         
         
