@@ -33,8 +33,9 @@
                 {% if task.finished %} Terminée {% else %} En cours {% endif %}
             </p>
         </div>
-        
-        <a href="{{ path('task_modifier', {'id': task.id}) }}" class="btn btn-primary">Modifier la tâche</a>
+        {% if app.user == task.taskList.owner %}
+            <a href="{{ path('task_modifier', {'id': task.id}) }}" class="btn btn-primary">Modifier la tâche</a>
+        {% endif %}
     </div>
 {% endblock %}
 
