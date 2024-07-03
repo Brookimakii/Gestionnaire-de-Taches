@@ -1,0 +1,62 @@
+{# templates/task_list/share.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Partager la liste : "{{ task_list.title }}"{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mb-4">{{ task_list.title }}</h1>
+        <p>{{ task_list.description }}</p>
+
+        {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Ajouter</button>
+        {{ form_end(form) }}
+
+        <h2 class="my-4">Liste des participants</h2>
+        {% if collaborators is empty %}
+            <div class="alert alert-info" role="alert">
+                Aucun participant pour l'instant.
+            </div>
+        {% else %}
+            <div class="list-group mb-4">
+                {% for collaborator in collaborators %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <h5 class="mb-1">{{ collaborator.pseudo }}</h5>
+                            {# <small>Nombre de tâches assignées: {{ collaborator.assignedTasks|length }}</small>
+                            <small>Nombre de tâches terminées: {{ collaborator.completedTasks|length }}</small> #}
+                        </span>
+                        <form method="post" action="{{ path('app_task_list_remove_collaborator', {'id': task_list.id, 'userId': collaborator.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ collaborator.id) }}">
+                            <button type="submit" class="btn btn-link p-0">
+                                <img src="{{ asset('image/supprimer.png') }}" alt="Supprimer" class="icon">
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <style>
+            .list-group-item {
+                background-color: #f0f0f0;
+                border-radius: 10px;
+                margin-bottom: 10px;
+                padding: 15px;
+            }
+            p {
+                text-align: center;
+            }
+            .icon {
+                height: 50px;
+                width: auto;
+                vertical-align: end;
+                margin-right: 10px;
+            }
+        </style>
+    </div>
+{% endblock %}

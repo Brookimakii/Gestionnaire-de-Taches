@@ -10,6 +10,9 @@
                     <a href="{{ path('app_task_list_edit', {'id': task_list.id}) }}" class="icon-link">
                         <img src="{{ asset('image/crayon.png') }}" alt="modifier liste" class="icon">
                     </a>
+                    <a href="{{ path('app_task_list_share', {'id': task_list.id}) }}" class="icon-link">
+                        <img src="{{ asset('image/partager.png') }}" alt="partager la liste" class="icon">
+                    </a>
                 {% endif %}
                 {{ task_list.title }}
             {% else %}
@@ -26,24 +29,24 @@
             <div class="list-group">
                 {% for task in tasks %}
                     <a href="{{ path('task_detail', {'id': task.id}) }}">
-                    <div class="list-group-item list-group-item-action {{ task.priority|lower }}">
+                    <div class="list-group-item list-group-item-action mb-3 {{ task.priority|lower }}">
                         <h5 class="mb-1">{{ task.title }}</h5>
                         <p class="mb-1">{{ task.description }}</p>
                         <small>Priorité: {{ task.priority }}</small><br>
                         {% if task.assignees is defined and task.assignees|length > 0 %}
                             <small>Responsable: {{ task.getAssigneesUsernames() }}</small>
                         {% endif %}
+                        {{ include('task/_delete_form.html.twig') }}
                     </div>
                     </a>
                 {% endfor %}
             </div>
         {% endif %}
-{#        TODO: Pourquoi ce bouton ?#}
-        <a href="{{ path('app_task_list_index') }}" class="btn btn-secondary">Retour à la liste des listes</a>
 
         <style>
             .list-group-item {
                 background-color: #f0f0f0;
+                border-radius:50px;
             }
 
             .rouge {
@@ -58,7 +61,7 @@
                 background-color: #ddffdd;
             }
 
-            h1 {
+            h1, h2 {
                 text-align: center;
             }
 

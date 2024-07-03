@@ -22,11 +22,11 @@
 
                         <div class="form-group">
                             <label for="inputEmail">Email</label>
-                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="Enter your email">
+                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="Entrez votre email">
                         </div>
                         <div class="form-group">
                             <label for="inputPassword">Password</label>
-                            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="Enter your password">
+                            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="Entrez votre mot de passe">
                         </div>
 
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
