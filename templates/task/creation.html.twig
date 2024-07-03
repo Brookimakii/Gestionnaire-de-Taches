@@ -3,10 +3,10 @@
 {% block title %}Créer une tâche{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1 class="mb-4">Créer une tâche</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">Créer une tâche</h1>
 
-    {{ form_start(form) }}
+        {{ form_start(form) }}
         <div class="form-group">
             {{ form_label(form.title) }}
             {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
@@ -23,6 +23,11 @@
             {{ form_errors(form.creation_date) }}
         </div>
         <div class="form-group">
+            {{ form_label(form.due_date) }}
+            {{ form_widget(form.due_date, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.due_date) }}
+        </div>
+        <div class="form-group">
             {{ form_label(form.priority) }}
             {{ form_widget(form.priority, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(form.priority) }}
@@ -33,16 +38,11 @@
             {{ form_errors(form.finished) }}
         </div>
         <div class="form-group">
-            {{ form_label(form.due_date) }}
-            {{ form_widget(form.due_date, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(form.due_date) }}
-        </div>
-        <div class="form-group">
             {{ form_label(form.assignees) }}
             {{ form_widget(form.assignees, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(form.assignees) }}
         </div>
         <button type="submit" class="btn btn-primary">Créer</button>
-    {{ form_end(form) }}
-</div>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

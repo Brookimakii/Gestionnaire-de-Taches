@@ -28,8 +28,16 @@
         {% else %}
             <div class="list-group">
                 {% for task in tasks %}
+                    {% if task.tasklist.owner == app.user or task.assignees|length == 0 or app.user in task.assignees %}
+                        <form action="{{ path('task_toggle_finished', {'id': task.id}) }}" method="post">
+                            <input type="checkbox" name="finished" class="form-control"
+                               {% if task.finished %}checked{% endif %}
+                               onchange="this.form.submit()"
+                            >
+                        </form>
+                    {% endif %}
                     <a href="{{ path('task_detail', {'id': task.id}) }}">
-                    <div class="list-group-item list-group-item-action mb-3 {{ task.priority|lower }}">
+                    <div class="list-group-item list-group-item-action mb-3 {{ task.priority|lower }} {% if task.finished %}finished{% endif %}">
                         <h5 class="mb-1">{{ task.title }}</h5>
                         <p class="mb-1">{{ task.description }}</p>
                         <small>Priorité: {{ task.priority }}</small><br>
@@ -64,21 +72,22 @@
             h1, h2 {
                 text-align: center;
             }
-
             .icon {
                 height: 20px;
                 width: auto;
                 vertical-align: middle;
                 margin-left: 10px;
             }
-
             .icon-link {
                 text-decoration: none;
                 color: inherit;
             }
-
             .card-text, .card-title {
                 text-align: center;
+            }
+            .finished{
+                text-decoration: line-through black; !important;
+                background-color: #b0b0b0;
             }
         </style>
     </div>
