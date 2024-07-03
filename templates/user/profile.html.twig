@@ -11,12 +11,20 @@
                     <h1 class="h3 mb-3 font-weight-normal text-center">Mon compte</h1>
                     <form method="post" action="{{ path('app_profile_edit', {'id': user.id}) }}">
                         <div class="form-group text-center">
-                            <img src="{{ asset('path/to/profile_image.jpg') }}" alt="Profile Image" class="img-fluid rounded-circle mb-3" width="100" height="100">
-                            <a href="#">Edit profile image</a>
-{#                            <a href="{{ path('profile_edit_image') }}">Edit profile image</a>#}
+                            {% if app.user and app.user.pseudo %}
+                                <div class="profile-initials rounded-circle mb-3" style="width: 100px; height: 100px; background-color: #007bff; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 36px;">
+                                    {{ app.user.pseudo|first|upper }}
+                                </div>
+                            {% else %}
+                                <div class="profile-initials rounded-circle mb-3" style="width: 100px; height: 100px; background-color: #007bff; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 36px;">
+                                    U
+                                </div>
+                            {% endif %}
+                            {# <a href="#">Edit profile image</a> #}
+                            {# <a href="{{ path('profile_edit_image') }}">Edit profile image</a> #}
                         </div>
                         <div class="form-group">
-                            <label for="username">Username</label>
+                            <label for="username">Pseudo</label>
                             <input type="text" value="{{ user.pseudo }}" name="username" id="username" class="form-control" required>
                         </div>
                         <div class="form-group">
@@ -24,7 +32,7 @@
                             <input type="email" value="{{ user.email }}" name="email" id="email" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label for="currentPassword">Mdp actuel</label>
+                            <label for="currentPassword">Mot de passe actuel</label>
                             <input type="password" name="currentPassword" id="currentPassword" class="form-control" required>
                         </div>
                         <div class="form-group">

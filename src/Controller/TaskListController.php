@@ -6,6 +6,7 @@
 	use App\Form\ListTaskType;
 	use App\Form\SearchType;
 	use App\Form\TaskListType;
+	use App\Form\ShareFormType;
 	use App\Repository\TaskListRepository;
 	use App\Repository\UserRepository;
 	use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,22 +58,70 @@
 		//----------------------------------------------------------------------------------------------
 
 		// Todo: Link to share & Form to share
-		#[Route('/{id}/share', name: 'app_task_list_share', methods: ['GET'])]
-		public function shareList(Request $request, EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository): Response {
-			$form = $this->createForm(TaskListType::class, $taskList);
+		// #[Route('/{id}/share', name: 'app_task_list_share', methods: ['GET'])]
+		// public function shareList(Request $request, EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository): Response {
+		// 	$form = $this->createForm(TaskListType::class, $taskList);
+		// 	$form->handleRequest($request);
+
+		// 	if ($form->isSubmitted() && $form->isValid()) {
+		// 		$entityManager->flush();
+
+		// 		return $this->redirectToRoute($request->headers->get('referer'), [], Response::HTTP_SEE_OTHER);
+		// 	}
+
+
+		// 	return $this->render('task_list/share.html.twig', [
+		// 		'collaborators' => $userRepository->getUserAssociateToList($taskList),
+		// 		'otherUsers' => $userRepository->getUserNotAssociateToList($taskList),
+		// 	]);
+		// }
+		#[Route('/{id}/share', name: 'app_task_list_share', methods: ['GET', 'POST'])]
+		public function shareList(Request $request, EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository): Response
+		{
+			$form = $this->createForm(ShareFormType::class);
 			$form->handleRequest($request);
 
 			if ($form->isSubmitted() && $form->isValid()) {
-				$entityManager->flush();
+				$data = $form->getData();
+				$email = $data['email'];
+				$user = $userRepository->findOneBy(['email' => $email]);
 
-				return $this->redirectToRoute($request->headers->get('referer'), [], Response::HTTP_SEE_OTHER);
+				if ($user) {
+					$taskList->addSharedWith($user);
+					$entityManager->persist($taskList);
+					$entityManager->flush();
+
+					$this->addFlash('success', 'Utilisateur ajouté avec succès à la liste.');
+				} else {
+					$this->addFlash('error', 'Utilisateur introuvable.');
+				}
+
+				return $this->redirectToRoute('app_task_list_share', ['id' => $taskList->getId()]);
 			}
 
-
-			return $this->render('tasklist/list.html.twig', [
-				'collaborators' => $userRepository->getUserAssociateToList($taskList),
-				'otherUsers' => $userRepository->getUserNotAssociateToList($taskList),
+			return $this->render('task_list/share.html.twig', [
+				'task_list' => $taskList,
+				'form' => $form->createView(),
+				'collaborators' => $taskList->getSharedWith(),
 			]);
+		}
+
+		#[Route('/task_list/{id}/remove_collaborator/{userId}', name: 'app_task_list_remove_collaborator', methods: ['POST'])]
+		public function removeCollaborator(EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository, int $userId): Response
+		{
+			$user = $userRepository->find($userId);
+
+			if ($user) {
+				$taskList->removeSharedWith($user);
+				$entityManager->persist($taskList);
+				$entityManager->flush();
+
+				$this->addFlash('success', 'Utilisateur supprimé avec succès de la liste.');
+			} else {
+				$this->addFlash('error', 'Utilisateur introuvable.');
+			}
+
+			return $this->redirectToRoute('app_task_list_share', ['id' => $taskList->getId()]);
 		}
 
 		#[Route('/creer', name: 'tasklist_creer')]
