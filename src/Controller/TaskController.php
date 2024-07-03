@@ -105,6 +105,15 @@
 				$entityManager->flush();
 			}
 
-			return $this->redirectToRoute($request->headers->get('referer'), [], Response::HTTP_SEE_OTHER);
+			return $this->redirect($request->headers->get('referer'), Response::HTTP_SEE_OTHER);
+		}
+
+		#[Route('/task/{id}/toggle-finished', name: 'task_toggle_finished', methods: ['POST'])]
+		public function toggleFinished(Task $task, Request $request): Response {
+
+			$task->setFinished(!$task->isFinished());
+			$this->entityManager->flush();
+
+			return $this->redirect($request->headers->get('referer'), Response::HTTP_SEE_OTHER);
 		}
 	}

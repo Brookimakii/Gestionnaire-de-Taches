@@ -48,6 +48,7 @@ class TaskType extends AbstractType
             ])
             ->add('due_date', DateType::class, [
                 'widget' => 'single_text',
+							'required' => false
             ])
 					->add('assignees', EntityType::class, [
 						'class' => User::class,

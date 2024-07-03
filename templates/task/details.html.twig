@@ -33,6 +33,15 @@
                 {% if task.finished %} Terminée {% else %} En cours {% endif %}
             </p>
         </div>
+        {% if task.tasklist.owner == app.user or task.assignees|length == 0 or app.user in task.assignees %}
+            <form action="{{ path('task_toggle_finished', {'id': task.id}) }}" method="post">
+                <label>Fini ? </label>
+                <input type="checkbox" name="finished" class="form-control"
+                       {% if task.finished %}checked{% endif %}
+                       onchange="this.form.submit()"
+                >
+            </form>
+        {% endif %}
         {% if app.user == task.taskList.owner %}
             <a href="{{ path('task_modifier', {'id': task.id}) }}" class="btn btn-primary">Modifier la tâche</a>
         {% endif %}
