@@ -21,6 +21,16 @@
                                 {% endif %}
                             </a>
                         </li>
+                        <li class="nav-item">
+                            {% if app.user %}
+                            <div class="mb-3">
+                                <a href="{{ path('app_logout') }}">
+                                    <img src="{{ asset('image/se-deconnecter.png') }}" alt="se déconnecter" class="header-icon">
+                                </a>
+                            </div>
+                            {% endif %}
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
@@ -44,5 +54,11 @@
     }
     .nav-link{
         font-size:30px;
+    }
+    .header-icon{
+        height: 30px;
+        width: auto;
+        margin-left: 5px;
+        margin-top: 16px;
     }
 </style>
