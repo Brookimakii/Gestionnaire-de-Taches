@@ -1,39 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer un compte{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8 col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h1 class="h3 mb-3 font-weight-normal text-center">Créer un compte</h1>
-                    <form method="post">
+                    <h1 class="h3 mb-3 font-weight-normal text-center">S'inscrire</h1>
+                    {{ form_start(registrationForm) }}
                         <div class="form-group">
-                            <label for="username">Pseudo</label>
-                            <input type="text" name="username" id="username" class="form-control" required>
+                            {{ form_label(registrationForm.pseudo, null, {'label_attr': {'class': 'col-form-label'}}) }}
+                            {{ form_widget(registrationForm.pseudo, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(registrationForm.pseudo) }}
                         </div>
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" id="email" class="form-control" required>
+                            {{ form_label(registrationForm.email, null, {'label_attr': {'class': 'col-form-label'}}) }}
+                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(registrationForm.email) }}
                         </div>
                         <div class="form-group">
-                            <label for="password">Mot de passe</label>
-                            <input type="password" name="password" id="password" class="form-control" required>
+                            {{ form_label(registrationForm.plainPassword.first, 'Mot de passe', {'label_attr': {'class': 'col-form-label'}}) }}
+                            {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(registrationForm.plainPassword.first) }}
                         </div>
                         <div class="form-group">
-                            <label for="confirmPassword">Confirmation mot de passe</label>
-                            <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required>
+                            {{ form_label(registrationForm.plainPassword.second, 'Confirmation Mot de passe', {'label_attr': {'class': 'col-form-label'}}) }}
+                            {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(registrationForm.plainPassword.second) }}
                         </div>
-
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}">
-
-                        <button class="btn btn-lg btn-primary btn-block" type="submit">Créer un compte</button>
-                    </form>
+                        <div class="form-group form-check">
+                            {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                            {{ form_errors(registrationForm.agreeTerms) }}
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">Register</button>
+                    {{ form_end(registrationForm) }}
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+{% endblock %}   
