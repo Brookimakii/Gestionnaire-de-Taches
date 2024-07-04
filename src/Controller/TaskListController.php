@@ -46,6 +46,19 @@
 				'show_footer' => "list"
 			]);
 		}
+		// #[Route('/tasklists/private', name: 'app_task_private_list_index', methods: ['GET'])]
+		// public function personalList(TaskListRepository $taskListRepository): Response
+		// {
+		// 	$user = $this->getUser();
+
+		// 	// Récupérer toutes les listes de tâches personnelles de l'utilisateur
+		// 	$personalLists = $taskListRepository->findPersonalListOfUser($user);
+
+		// 	return $this->render('tasklist/list.html.twig', [
+		// 		'tasks' => $personalLists,
+		// 		'show_footer' => 'list',
+		// 	]);
+		// }
 
 		#[Route('s/shared', name: 'app_task_shared_list_index', methods: ['GET'])]
 		public function sharedList(TaskListRepository $taskListRepository): Response {
@@ -143,6 +156,10 @@
 
 		#[Route('/{id}', name: 'app_task_list_delete', methods: ['POST'])]
 		public function delete(Request $request, TaskList $taskList, EntityManagerInterface $entityManager): Response {
+			if ($this->getUser() !== $taskList->getOwner()) {
+				$this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cette liste.');
+				return $this->redirectToRoute('app_task_private_list_index');
+			}
 			if ($this->isCsrfTokenValid('delete' . $taskList->getId(), $request->getPayload()->getString('_token'))) {
 				$entityManager->remove($taskList);
 				$entityManager->flush();
