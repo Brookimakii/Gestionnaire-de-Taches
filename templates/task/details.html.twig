@@ -1,77 +1,48 @@
-{# templates/task/detail.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Détails de la tâche "{{ task.title }}"{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1>
-{#            Détails de la tâche "#}
-            {{ task.title }}
-{#            "#}
-        </h1>
+        <div class="card mx-auto mt-5" style="width: 50%;">
+            <div class="card-body text-center">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="d-flex align-items-center">
+                        {% if app.user == task.taskList.owner %}
+                            <a href="{{ path('task_modifier', {'id': task.id}) }}" class="icon-link ml-3">
+                                <img src="{{ asset('image/crayon.png') }}" alt="modifier tâche" class="taskicon" style="width:20px; height:20px;">
+                            </a>
+                        {% endif %}
+                        <h1 class="card-title mb-0">{{ task.title }}</h1>
+                    </div>
+                </div>
 
-        <div class="task-detail {{ task.priority|lower }}">
-            <p>
-{#                Description :#}
-                {{ task.description }}
-            </p>
-            <p>
-                Date de création :
-                {{ task.creationDate ? task.creationDate|date('d/m/Y') : 'Non spécifiée' }}
-            </p>
-            <p>
-                Échéance :
-                {{ task.dueDate ? task.dueDate|date('d/m/Y') : 'Non spécifiée' }}
-            </p>
-            <p>
-                Priorité :
-                {{ task.priority }}
-            </p>
-            <p>
-                Statut :
-                {% if task.finished %} Terminée {% else %} En cours {% endif %}
-            </p>
+                <div class="task-detail {{ task.priority|lower }}">
+                    <div class="mb-3">
+                        <strong>Description :</strong>
+                        <p class="text-center">{{ task.description }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Échéance :</strong>
+                        <p>{{ task.dueDate ? task.dueDate|date('d/m/Y') : 'Non spécifiée' }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Responsable :</strong>
+                        <p>{{ task.assignees|length > 0 ? task.getAssigneesUsernames() : 'Non assigné' }}</p>
+                    </div>
+                    <div class="mb-3 text-center">
+                        {% if task.tasklist.owner == app.user or task.assignees|length == 0 or app.user in task.assignees %}
+                            <form action="{{ path('task_toggle_finished', {'id': task.id}) }}" method="post">
+                                <label>Fini ? </label>
+                                <input type="checkbox" name="finished" class="form-control"
+                                       {% if task.finished %}checked{% endif %}
+                                       onchange="this.form.submit()"
+                                >
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        {% if task.tasklist.owner == app.user or task.assignees|length == 0 or app.user in task.assignees %}
-            <form action="{{ path('task_toggle_finished', {'id': task.id}) }}" method="post">
-                <label>Fini ? </label>
-                <input type="checkbox" name="finished" class="form-control"
-                       {% if task.finished %}checked{% endif %}
-                       onchange="this.form.submit()"
-                >
-            </form>
-        {% endif %}
-        {% if app.user == task.taskList.owner %}
-            <a href="{{ path('task_modifier', {'id': task.id}) }}" class="btn btn-primary">Modifier la tâche</a>
-        {% endif %}
     </div>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        .task-detail {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            color: white;
-        }
-
-        .rouge {
-            background-color: red;
-        }
-
-        .orange {
-            background-color: orange;
-        }
-
-        .verte {
-            background-color: green;
-        }
-
-        .gris {
-            background-color: grey;
-        }
-    </style>
 {% endblock %}

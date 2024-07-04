@@ -29,24 +29,26 @@
             <div class="list-group">
                 {% for task in tasks %}
                     {% if task.tasklist.owner == app.user or task.assignees|length == 0 or app.user in task.assignees %}
-                        <form action="{{ path('task_toggle_finished', {'id': task.id}) }}" method="post">
-                            <input type="checkbox" name="finished" class="form-control"
-                               {% if task.finished %}checked{% endif %}
-                               onchange="this.form.submit()"
-                            >
-                        </form>
+                        <div class="list-group-item d-flex align-items-center mb-3 {% if task.finished %}finished{% else %}{{ task.priority|lower }}{% endif %}">
+                            <form action="{{ path('task_toggle_finished', {'id': task.id}) }}" method="post" class="mr-3">
+                                <input type="checkbox" name="finished"
+                                   {% if task.finished %}checked{% endif %}
+                                   onchange="this.form.submit()"
+                                >
+                            </form>
+                            <a href="{{ path('task_detail', {'id': task.id}) }}" class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="mb-1">{{ task.title }}</h5>
+                                    <small class="priority">Priorité: {{ task.priority }}</small>
+                                </div>
+                                <p class="mb-1">{{ task.description }}</p>
+                                {% if task.assignees is defined and task.assignees|length > 0 %}
+                                    <small>Responsable: {{ task.getAssigneesUsernames() }}</small>
+                                {% endif %}
+                            </a>
+                            {{ include('task/_delete_form.html.twig') }}
+                        </div>
                     {% endif %}
-                    <a href="{{ path('task_detail', {'id': task.id}) }}">
-                    <div class="list-group-item list-group-item-action mb-3 {{ task.priority|lower }} {% if task.finished %}finished{% endif %}">
-                        <h5 class="mb-1">{{ task.title }}</h5>
-                        <p class="mb-1">{{ task.description }}</p>
-                        <small>Priorité: {{ task.priority }}</small><br>
-                        {% if task.assignees is defined and task.assignees|length > 0 %}
-                            <small>Responsable: {{ task.getAssigneesUsernames() }}</small>
-                        {% endif %}
-                        {{ include('task/_delete_form.html.twig') }}
-                    </div>
-                    </a>
                 {% endfor %}
             </div>
         {% endif %}
@@ -54,7 +56,7 @@
         <style>
             .list-group-item {
                 background-color: #f0f0f0;
-                border-radius:50px;
+                border-radius: 10px;
             }
 
             .rouge {
@@ -72,24 +74,41 @@
             h1, h2 {
                 text-align: center;
             }
+
             .icon {
                 height: 20px;
                 width: auto;
                 vertical-align: middle;
                 margin-left: 10px;
             }
+
             .icon-link {
                 text-decoration: none;
                 color: inherit;
             }
+
             .card-text, .card-title {
                 text-align: center;
             }
-            .finished{
-                text-decoration: line-through black; !important;
+
+            .finished {
                 background-color: #b0b0b0;
+                text-decoration: line-through;
+            }
+
+            a {
+                text-decoration: none;
+                color: #4D4D4D;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color: #4D4D4D;
+            }
+
+            .priority {
+                align-self: flex-start;
             }
         </style>
     </div>
-{#    {% include 'footer.html.twig' %}#}
 {% endblock %}

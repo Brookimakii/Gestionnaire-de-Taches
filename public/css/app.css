@@ -39,21 +39,6 @@ html, body {
     height: 50px;
 }
 
-/* Styles personnalisés pour le formulaire de recherche dans la navbar */
-/* .navbar .form-inline {
-    display: flex;
-    align-items: center;
-}
-
-.navbar .form-inline .form-control {
-    width: auto;
-    margin-right: 10px;
-}
-
-.navbar .form-inline .btn {
-    margin-top: 0;
-} */
-
 
 /* Styles personnalisés pour les listes de listes */
 
@@ -88,12 +73,6 @@ html, body {
     color: #888;
 }
 
-@media screen and (max-width: 320px) {
-    .container mt-4{
-        width: 100%;
-    }
-}
-
 .list-group-item
 { background-color: #f0f0f0; }
 .rouge { background-color: #ffdddd; }
@@ -103,25 +82,7 @@ html, body {
 h1 {
     text-align: center;
 }
-/* .icon{
-    height: 20px;
-    width: auto;
-    vertical-align: middle;
-    margin-left: 5px;
-}
-.icon-link {
-    text-decoration: none;
-    color: inherit;
-} */
 
-/* .avatar {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 32px;
-    color: white;
-    font-weight: bold;
-    margin-right: 10px;
-} */
+.btn{
+    background-color: #A3C4F3;
+}
