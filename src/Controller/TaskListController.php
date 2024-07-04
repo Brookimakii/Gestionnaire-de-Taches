@@ -56,25 +56,6 @@
 		}
 
 		//----------------------------------------------------------------------------------------------
-
-		// Todo: Link to share & Form to share
-		// #[Route('/{id}/share', name: 'app_task_list_share', methods: ['GET'])]
-		// public function shareList(Request $request, EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository): Response {
-		// 	$form = $this->createForm(TaskListType::class, $taskList);
-		// 	$form->handleRequest($request);
-
-		// 	if ($form->isSubmitted() && $form->isValid()) {
-		// 		$entityManager->flush();
-
-		// 		return $this->redirectToRoute($request->headers->get('referer'), [], Response::HTTP_SEE_OTHER);
-		// 	}
-
-
-		// 	return $this->render('task_list/share.html.twig', [
-		// 		'collaborators' => $userRepository->getUserAssociateToList($taskList),
-		// 		'otherUsers' => $userRepository->getUserNotAssociateToList($taskList),
-		// 	]);
-		// }
 		#[Route('/{id}/share', name: 'app_task_list_share', methods: ['GET', 'POST'])]
 		public function shareList(Request $request, EntityManagerInterface $entityManager, TaskList $taskList, UserRepository $userRepository): Response
 		{
