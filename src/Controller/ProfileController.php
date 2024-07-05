@@ -20,7 +20,7 @@
 			]);
 		}
 
-		#[Route('/edit', name: 'app_profile_edit', methods: ['GET', 'POST'])]
+		#[Route('/edit/{id}', name: 'app_profile_edit', methods: ['GET', 'POST'])]
 		public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response {
 			$form = $this->createForm(UserType::class, $user);
 			$form->handleRequest($request);
